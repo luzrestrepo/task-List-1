@@ -13,38 +13,20 @@ import {
 import { MdOutlineDelete } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { FaUserEdit } from "react-icons/fa";
-import { useState } from "react";
+import useTaskList from "./hooks/UseTaskList";
 
-export const TaskList = ({ tasks, setTasks }) => {
-  const [editingId, setEditingId] = useState(null);
-  const [editInput, setEditInput] = useState("");
-
-  const deleteTodo = (id) => {
-    const newAlls = [...tasks];
-    newAlls.splice(id, 1);
-    setTasks(newAlls);
-  };
-  const toggleComplete = (id) => {
-    const newAlls = [...tasks];
-    newAlls[id].completed = !newAlls[id].completed;
-    setTasks(newAlls);
-  };
-
-  const handleEdit = (id) => {
-    setEditingId(id);
-    setEditInput(tasks[id].text);
-  };
-
-  const saveEdit = (id) => {
-    const newAlls = [...tasks];
-    newAlls[id].text = editInput;
-    setTasks(newAlls);
-    setEditingId(null);
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-  };
+export const TaskList = () => {
+  const {
+    tasks,
+    editingId,
+    editInput,
+    deleteTask,
+    toggleComplete,
+    handleEdit,
+    saveEdit,
+    cancelEdit,
+    handleEditInputChange,
+  } = useTaskList();
 
   return (
     <Flex direction="column" align="center">
@@ -57,11 +39,11 @@ export const TaskList = ({ tasks, setTasks }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {tasks.map((all, index) => (
-            <Tr key={index} className={all.completed ? "completed" : ""}>
+          {tasks.map((task, index) => (
+            <Tr key={index}>
               <Td>
                 <Box onClick={() => toggleComplete(index)}>
-                  {all.completed ? (
+                  {task.isCompleted ? (
                     <BsCheckCircleFill color="green" />
                   ) : (
                     <BsCheckCircleFill color="gray" />
@@ -72,16 +54,18 @@ export const TaskList = ({ tasks, setTasks }) => {
                 {editingId === index ? (
                   <Input
                     value={editInput}
-                    onChange={(e) => setEditInput(e.target.value)}
+                    onChange={(e) => handleEditInputChange(e.target.value)}
                   />
                 ) : (
                   <Box
                     style={{
-                      textDecoration: all.completed ? "line-through" : "none",
+                      textDecoration: task.isCompleted
+                        ? "line-through"
+                        : "none",
                     }}
                     onClick={() => handleEdit(index)}
                   >
-                    {all.text}
+                    {task.text}
                   </Box>
                 )}
               </Td>
@@ -106,7 +90,7 @@ export const TaskList = ({ tasks, setTasks }) => {
                       <Box onClick={() => handleEdit(index)}>
                         <FaUserEdit color="green" />
                       </Box>
-                      <Box onClick={() => deleteTodo(index)}>
+                      <Box onClick={() => deleteTask(index)}>
                         <MdOutlineDelete color="red" />
                       </Box>
                     </>
