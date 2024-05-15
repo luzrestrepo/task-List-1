@@ -1,15 +1,12 @@
-import React, { useState } from "react";
 import { Button, Flex, Input } from "@chakra-ui/react";
+import useTaskList from "./hooks/UseTaskList";
 
-const TodoForm = ({ tasks, setTasks }) => {
-  const [taskInput, setTaskInput] = useState("");
+const TodoForm = () => {
+  const { taskInput, handleTaskInputChange, createTask } = useTaskList();
 
   const addTask = (e) => {
     e.preventDefault();
-    if (taskInput.trim()) {
-      setTasks([...tasks, { text: taskInput, isCompleted: false }]);
-      setTaskInput("");
-    }
+    createTask(taskInput);
   };
 
   return (
@@ -18,7 +15,7 @@ const TodoForm = ({ tasks, setTasks }) => {
         <Input
           type="text"
           value={taskInput}
-          onChange={(e) => setTaskInput(e.target.value)}
+          onChange={(e) => handleTaskInputChange(e.target.value)}
           placeholder="Enter task..."
         />
         <Button colorScheme="green" size="sx" type="submit">
