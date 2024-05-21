@@ -5,13 +5,19 @@ const useTaskList = () => {
   const [editingId, setEditingId] = useState(null);
   const [editInput, setEditInput] = useState("");
   const [taskInput, setTaskInput] = useState("");
+  const [descriptionInput, setDescriptionInput] = useState("");
 
   const createTask = () => {
     if (taskInput.trim()) {
-      const newTask = { text: taskInput, isCompleted: false };
+      const newTask = {
+        text: taskInput,
+        description: descriptionInput,
+        isCompleted: false,
+      };
       const newTasks = [...tasks, newTask];
       setTasks(newTasks);
       setTaskInput("");
+      setDescriptionInput("");
       localStorage.setItem("tasks", JSON.stringify(newTasks));
     }
   };
@@ -44,13 +50,23 @@ const useTaskList = () => {
   const saveEdit = (id) => {
     const newTasks = [...tasks];
     newTasks[id].text = editInput;
+    newTasks[id].description = descriptionInput; // Guardar la descripción editada
     setTasks(newTasks);
     setEditingId(null);
+    setEditInput("");
+    setDescriptionInput(""); // Limpiar el estado de edición de la descripción
     localStorage.setItem("tasks", JSON.stringify(newTasks));
   };
 
   const cancelEdit = () => {
     setEditingId(null);
+    setEditInput("");
+    setDescriptionInput("");
+  };
+
+  const handleDescriptionInputChange = (value) => {
+    // Nueva función para manejar el cambio de la descripción
+    setDescriptionInput(value);
   };
 
   const handleTaskInputChange = (value) => {
@@ -66,6 +82,7 @@ const useTaskList = () => {
     editingId,
     editInput,
     taskInput,
+    descriptionInput,
     createTask,
     deleteTask,
     toggleComplete,
@@ -73,6 +90,7 @@ const useTaskList = () => {
     saveEdit,
     cancelEdit,
     handleTaskInputChange,
+    handleDescriptionInputChange,
     handleEditInputChange,
   };
 };

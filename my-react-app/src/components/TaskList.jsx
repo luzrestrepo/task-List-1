@@ -20,12 +20,14 @@ export const TaskList = () => {
     tasks,
     editingId,
     editInput,
+    descriptionInput,
     deleteTask,
     toggleComplete,
     handleEdit,
     saveEdit,
     cancelEdit,
     handleEditInputChange,
+    handleDescriptionInputChange,
   } = useTaskList();
 
   return (
@@ -35,6 +37,7 @@ export const TaskList = () => {
           <Tr>
             <Th>Status</Th>
             <Th>Task</Th>
+            <Th>Description</Th> {/* Nueva columna para la descripción */}
             <Th>Action</Th>
           </Tr>
         </Thead>
@@ -66,6 +69,26 @@ export const TaskList = () => {
                     onClick={() => handleEdit(index)}
                   >
                     {task.text}
+                  </Box>
+                )}
+              </Td>
+              <Td>
+                {editingId === index ? (
+                  <Input
+                    value={descriptionInput}
+                    onChange={(e) =>
+                      handleDescriptionInputChange(e.target.value)
+                    }
+                  />
+                ) : (
+                  <Box
+                    style={{
+                      textDecoration: task.isCompleted
+                        ? "line-through"
+                        : "none",
+                    }}
+                  >
+                    {task.description}
                   </Box>
                 )}
               </Td>
